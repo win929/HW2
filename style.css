@@ -1,0 +1,71 @@
+h1 {  
+    text-align: center;
+    font-size: 70px;
+    font-family: "Black Han Sans", sans-serif;
+}
+
+#calendar {
+    margin-top: 20px;
+}
+
+table {
+    font-family: sans-serif;
+    width: 100%;
+    min-height: 800px;
+}
+
+th {
+    border: 1px solid #dddddd;
+    border-collapse: collapse;
+    text-align: left;
+    padding: 8px;
+
+    /* 내가 그냥 넣음 */
+    height: 30px;
+}
+
+td {
+    border: 1px solid #dddddd;
+    border-collapse: collapse;
+    padding: 8px;
+}
+
+.date {
+    height: 25px;
+    font-size: 10px;
+    text-align: center;
+    font-weight: bold;
+    padding: 8px;
+}
+
+.rightField {
+    margin-top: 20px;
+    padding: 10px;
+    min-height: 390px;
+    color: white;
+}
+
+#unfinished {
+    background-color: rgba(102, 102, 102, 0.2);
+}
+
+#finished {
+    background-color: rgba(0, 0, 255, 0.2);
+}
+
+#dailyWrite {
+    width: 500px;
+    height: 400px;
+    padding: 30px;
+    border: 2px ridge;
+    border-radius: 5px;
+    background-color: LightSkyBlue;
+    top: 145px;
+    left: 80px;
+}
+
+/* 내가 그냥 넣음 */
+#content {
+    width: 250px;
+    height: 120px;
+}
