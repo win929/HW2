@@ -35,7 +35,7 @@
 
         echo '<tr>';
         for ($j = 0; $j < 7; $j++) {
-            echo '<td class="blank" id="blank'.($blankId++).'">';
+            echo '<td class="blnk" id="blnk'.($blankId++).'">';
         }
         echo '</tr>';
     }
