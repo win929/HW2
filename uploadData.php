@@ -4,7 +4,26 @@ header("Content-Type: text/html; charset=UTF-8");
 // POST 데이터 받기
 $id = $_POST['id'];
 $date = $_POST['date'];
-$order = $_POST['order'];
+
+// mylists.json 파일 읽기
+$lines = explode("
+", file_get_contents('data/mylists.json'));
+$maxOrder = 0;
+
+foreach ($lines as $line) {
+  // 빈 줄이 아니면 JSON 데이터를 배열로 변환
+  if ($line !== "") {
+    $obj = json_decode($line, true);
+
+    // 같은 날짜의 데이터 중 가장 큰 order 값 찾기
+    if ($obj['date'] === $date) {
+      $maxOrder = max($maxOrder, $obj['order']);
+    }
+  }
+}
+
+$order = $maxOrder + 1;
+
 $title = $_POST['title'];
 $description = $_POST['description'];
 $category = $_POST['category'];
