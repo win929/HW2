@@ -79,4 +79,3 @@ file_put_contents('data/mylists.json', $json_string . "
 
 echo "success";
 ?>
-
