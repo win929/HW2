@@ -1,40 +1,29 @@
 <?php
 header("Content-Type: text/html; charset=UTF-8");
 
-// POST 데이터 받기
 $id = $_POST['id'];
 $date = $_POST['date'];
+$title = $_POST['title'];
+$description = $_POST['description'];
+$category = $_POST['category'];
 
-// mylists.json 파일 읽기
-$lines = explode("
-", file_get_contents('data/mylists.json'));
+$lines = file_get_contents('data/mylists.json');
+$lines = json_decode($lines, true);
 $maxOrder = 0;
 
 foreach ($lines as $line) {
-  // 빈 줄이 아니면 JSON 데이터를 배열로 변환
-  if ($line !== "") {
-    $obj = json_decode($line, true);
-
-    // 같은 날짜의 데이터 중 가장 큰 order 값 찾기
-    if ($obj['date'] === $date) {
-      $maxOrder = max($maxOrder, $obj['order']);
-    }
+  if ($line['date'] === $date) {
+    $maxOrder = max($maxOrder, $line['order']);
   }
 }
 
 $order = $maxOrder + 1;
 
-$title = $_POST['title'];
-$description = $_POST['description'];
-$category = $_POST['category'];
-
-// 파일 업로드 처리
 $target_dir = "uploads/";
 $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 $uploadOk = 1;
 $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 
-// 파일이 이미지인지 확인
 if(isset($_POST["submit"])) {
  $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
  if($check !== false) {
@@ -46,7 +35,6 @@ if(isset($_POST["submit"])) {
  }
 }
 
-// 파일 업로드 에러 처리
 if ($uploadOk == 0) {
     echo "Sorry, your file was not uploaded.";
 } else {
@@ -59,7 +47,6 @@ if ($uploadOk == 0) {
 
 $file_name = basename($_FILES["fileToUpload"]["name"]);
 
-// 받은 데이터를 배열로 만들기
 $data = array(
     "id" => $id,
     "date" => $date,
@@ -70,12 +57,14 @@ $data = array(
     "file_name" => $file_name
 );
 
-// JSON 데이터에 새 데이터 추가
-$json_string = json_encode($data, JSON_UNESCAPED_UNICODE);
+$lines[] = $data;
 
-// JSON 파일에 새 데이터 쓰기
-file_put_contents('data/mylists.json', $json_string . "
-", FILE_APPEND);
+$json_string = json_encode($lines, JSON_UNESCAPED_UNICODE);
+
+// 정규 표현식을 이용하여 }, { 사이에 줄바꿈 문자 추가
+$json_string = preg_replace("/},\s*{/", "},\n{", $json_string);
+
+file_put_contents('data/mylists.json', $json_string);
 
 echo "success";
 ?>

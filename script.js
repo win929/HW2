@@ -1,21 +1,29 @@
-// month가 바뀌면 달력 테이블도 바뀌도록 설정 (AJAX 이용)
+// month가 바뀌면 달력 테이블도 바뀌도록 설정
 $(document).ready(function() {
     blankColor();
     addEvent();
     $("#month").change(function() {
         var selectedMonth = $("#month").val();
-
+    
         $.ajax({
             url: "calendar.php",
             type: "POST",
             data: { month: selectedMonth },
-            success: function(data) {
-                $("#calendar").html(data);
+            dataType: 'json',  // 응답을 JSON으로 파싱합니다.
+            success: function(response) {
+                $("#calendar").html(response.calendar);
                 blankColor();
                 addEvent();
+    
+                // 각 일정을 달력에 표시합니다.
+                response.schedules.forEach(function(schedule) {
+                    var date = Number(schedule.date.slice(-2));  // 일자를 추출합니다.
+                    writeSchedule(schedule.title, date);XMLDocument
+                });
             }
         });
     });
+    
 });
 
 // 각 td에 이벤트 리스너 추가
@@ -93,7 +101,36 @@ function clickedTdToDate(clickedTd) {
 }
 
 // 달력에 저장된 일정 표시
+function writeSchedule(title, date) {
+    // clickedTd와 같은 dateDiv.innerHTML을 가진 td를 찾음
+    var dateDiv = document.getElementsByClassName("date");
+    var targetDate;
+    for (let i = 0; i < 42; i++) {
+        if (dateDiv[i].innerHTML == date) {
+            targetDate = i+1;
+            break;
+        }
+    }
 
+    var blnkDiv = document.getElementById("blnk" + targetDate);
+
+    var ol = blnkDiv.getElementsByTagName("ol");
+
+    // 만약 ol 태그가 없다면 새로 생성
+    if (ol.length === 0) {
+        ol = document.createElement("ol");
+        blnkDiv.appendChild(ol);
+    } else {
+        ol = ol[0];
+    }
+
+    // li 태그 생성하고 ol 태그에 추가
+    var li = document.createElement("li");
+    li.setAttribute("class", "writed");
+    li.setAttribute("id", "id");
+    li.innerHTML = title;
+    ol.appendChild(li);
+}
 
 // dailyWrite 모달창 저장
 $(document).ready(function() {
@@ -120,22 +157,9 @@ $(document).ready(function() {
                 // 저장 멘트 띄우기
                 alert("저장되었습니다.");
 
-                // 달력에 저장한 일정 표시
-                var dateDiv = $("#blnk" + clickedTd);
-                var ol = dateDiv.find('ol');
-
-                // 만약 ol 태그가 없다면 새로 생성
-                if (ol.length === 0) {
-                    ol = $("<ol></ol>");
-                    dateDiv.append(ol);
-                }
-
-                // li 태그 생성하고 ol 태그에 추가
-                var li = $("<li></li>");
-                li.addClass("writed");
-                li.attr("id", id);
-                li.text($("#title").val());
-                ol.append(li);
+                // 달력에 일정 표시
+                var targetDate = document.getElementById("date" + clickedTd).innerHTML;
+                writeSchedule($("#title").val(), targetDate);
 
                 // 모달창 닫기
                 var modal = $("#dailyWrite");
