@@ -65,7 +65,14 @@ td {
 }
 
 /* 내가 그냥 넣음 */
-#content {
+#description {
     width: 250px;
     height: 120px;
+}
+
+.writed {
+    background-color: rgba(57, 206, 180, 1);
+    margin: 5px;
+    padding: 5px;
+    border: 1px groove #e7e7e7;
 }

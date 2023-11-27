@@ -92,28 +92,58 @@ function clickedTdToDate(clickedTd) {
     return "2023-" + month + "-" + date;
 }
 
+// 달력에 저장된 일정 표시
+
+
 // dailyWrite 모달창 저장
 $(document).ready(function() {
     $("#saveButton").click(function(e) {
         e.preventDefault();
 
         var formData = new FormData();
-        formData.append('id', new Date().getTime());
+        var id = new Date().getTime();
+        formData.append('id', id);
         formData.append('date', clickedTdToDate(clickedTd));
         formData.append('order', 1);
         formData.append('title', $("#title").val());
         formData.append('description', $("#description").val());
         formData.append('category', $("#category option:selected").text());
-        formData.append('fileToUpload', $("#fileToUpload")[0].files[0]); 
+        formData.append('fileToUpload', $("#fileToUpload")[0].files[0]);
 
         $.ajax({
-            url: "uploadData.php",
             type: "POST",
+            url: "uploadData.php",
             data: formData,
             processData: false,  // 필수
             contentType: false,  // 필수
             success: function(data) {
-                console.log("success");
+                // 저장 멘트 띄우기
+                alert("저장되었습니다.");
+
+                // 달력에 저장한 일정 표시
+                var dateDiv = $("#blnk" + clickedTd);
+                var ol = dateDiv.find('ol');
+
+                // 만약 ol 태그가 없다면 새로 생성
+                if (ol.length === 0) {
+                    ol = $("<ol></ol>");
+                    dateDiv.append(ol);
+                }
+
+                // li 태그 생성하고 ol 태그에 추가
+                var li = $("<li></li>");
+                li.addClass("writed");
+                li.attr("id", id);
+                li.text($("#title").val());
+                ol.append(li);
+
+                // 모달창 닫기
+                var modal = $("#dailyWrite");
+                $("#title").val("");
+                $("#description").val("");
+                $("#category").val("todo");
+                $("#fileToUpload").val("");
+                modal.css("display", "none");
             }
         });
     });
