@@ -122,7 +122,7 @@ $(document).ready(function () {
                             break;
                     }
                     $("#editCategory").val(categoryInEnglish);
-                    $("#editFileToUpload").replaceWith(
+                    $("#editFile").html(
                         '<a href="uploads/' +
                             response.file_name +
                             '" target="_blank">' +
