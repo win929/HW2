@@ -18,7 +18,7 @@ $(document).ready(function() {
                 // 각 일정을 달력에 표시합니다.
                 response.schedules.forEach(function(schedule) {
                     var date = Number(schedule.date.slice(-2));  // 일자를 추출합니다.
-                    writeSchedule(schedule.title, date);XMLDocument
+                    writeSchedule(schedule.title, schedule.id, date);XMLDocument
                 });
             }
         });
@@ -101,7 +101,7 @@ function clickedTdToDate(clickedTd) {
 }
 
 // 달력에 저장된 일정 표시
-function writeSchedule(title, date) {
+function writeSchedule(title, id, date) {
     // clickedTd와 같은 dateDiv.innerHTML을 가진 td를 찾음
     var dateDiv = document.getElementsByClassName("date");
     var targetDate;
@@ -127,7 +127,7 @@ function writeSchedule(title, date) {
     // li 태그 생성하고 ol 태그에 추가
     var li = document.createElement("li");
     li.setAttribute("class", "writed");
-    li.setAttribute("id", "id");
+    li.setAttribute("id", id);
     li.innerHTML = title;
     ol.appendChild(li);
 }
@@ -159,7 +159,7 @@ $(document).ready(function() {
 
                 // 달력에 일정 표시
                 var targetDate = document.getElementById("date" + clickedTd).innerHTML;
-                writeSchedule($("#title").val(), targetDate);
+                writeSchedule($("#title").val(), id, targetDate);
 
                 // 모달창 닫기
                 var modal = $("#dailyWrite");
