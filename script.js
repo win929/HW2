@@ -1,4 +1,5 @@
 let clickedTd; // 클릭한 td id 저장
+let prevId; // 수정할 일정의 id 저장
 
 $(document).ready(function () {
     blankColor(); // 달력 테이블에서 날짜가 없는 셀 표현
@@ -93,10 +94,12 @@ $(document).ready(function () {
                 modal.css("display", "block");
             }
         } else {
+            prevId = event.target.id.substring(8);
+
             $.ajax({
                 type: "POST",
-                url: "edit.php",
-                data: { id: event.target.id },
+                url: "search.php",
+                data: { id: prevId },
                 dataType: "json",
                 success: function (response) {
                     // 모달창 띄우기
@@ -135,26 +138,85 @@ $(document).ready(function () {
     });
 
     // dailyEdit 모달창 닫기
-    $("#editCancelButton").click(function () {
+    $(document).on("click", "#editCancelButton", function () {
         var modal = $("#dailyEdit");
-        $("#editTitle").val("");
-        $("#editDescription").val("");
-        $("#editCategory").val("todo");
-        $("#editFileToUpload").val("");
+
+        $("#editTitle").prop("disabled", true);
+        $("#editDescription").prop("disabled", true);
+        $("#editCategory").prop("disabled", true);
+        $editFile = $("<span id='editFile'></span>");
+        $("#editFileToUpload").replaceWith($editFile);
+
+        $editButton = $("<input type='button' value='수정' id='editButton'>");
+        $("#submitButton").replaceWith($editButton);
+
         modal.css("display", "none");
     });
+
+    // 수정하기
+    $(document).on("click", "#editButton", function () {
+        // disabled 해제
+        $("#editTitle").prop("disabled", false);
+        $("#editDescription").prop("disabled", false);
+        $("#editCategory").prop("disabled", false);
+
+        // 파일 업로드 가능하게 함
+        $editFileToUpload = $(
+            "<input type='file' name='editFileToUpload' id='editFileToUpload'></input>"
+        );
+        $("#editFile").replaceWith($editFileToUpload);
+
+        // editButton -> submitButton로 교체
+        $submitButton = $(
+            "<input type='button' value='제출' id='submitButton'>"
+        );
+        $("#editButton").replaceWith($submitButton);
+    });
+
+    // 수정 제출
+    $(document).on("click", "#submitButton", function () {
+        var newTitle = $("#editTitle").val();
+        var newDescription = $("#editDescription").val();
+
+        var formData = new FormData();
+        formData.append("id", prevId);
+        formData.append("title", newTitle);
+        formData.append("description", newDescription);
+        formData.append("category", $("#editCategory option:selected").text());
+        formData.append("editFileToUpload", $("#editFileToUpload")[0].files[0]);
+
+        $.ajax({
+            type: "POST",
+            url: "edit.php",
+            data: formData,
+            processData: false, // 필수
+            contentType: false, // 필수
+            success: function (response) {
+                // 달력에 일정 표시하는 부분 수정
+                $("#schedule" + prevId).text(newTitle);
+
+                // unfinished 일정 표시하는 부분 수정
+                $("#unfinished" + prevId).text(newTitle);
+
+                // 모달창 닫기
+                var modal = $("#dailyEdit");
+
+                $("#editTitle").prop("disabled", true);
+                $("#editDescription").prop("disabled", true);
+                $("#editCategory").prop("disabled", true);
+                $editFile = $("<span id='editFile'></span>");
+                $("#editFileToUpload").replaceWith($editFile);
+
+                $editButton = $(
+                    "<input type='button' value='수정' id='editButton'>"
+                );
+                $("#submitButton").replaceWith($editButton);
+
+                modal.css("display", "none");
+            },
+        });
+    });
 });
-
-// // 각 td에 이벤트 리스너 추가
-// function addEvent() {
-//     for (let i = 1; i <= 42; i++) {
-//         let dateTd = document.getElementById("date" + i);
-//         dateTd.addEventListener("click", write);
-
-//         let blankTd = document.getElementById("blnk" + i);
-//         blankTd.addEventListener("click", write);
-//     }
-// }
 
 // 달력 테이블에서 날짜가 없는 셀 표현
 function blankColor() {
@@ -230,7 +292,7 @@ function writeSchedule(title, id, date) {
     // li 태그 생성하고 ol 태그에 추가
     var li = document.createElement("li");
     li.setAttribute("class", "writed");
-    li.setAttribute("id", id);
+    li.setAttribute("id", "schedule" + id);
     li.innerHTML = title;
     ol.appendChild(li);
 }
@@ -240,7 +302,7 @@ function writeUnfinished(title, id) {
     var unfinished = document.getElementById("unfinished");
     var div = document.createElement("div");
     div.setAttribute("class", "writedUnfinished");
-    div.setAttribute("id", id);
+    div.setAttribute("id", "unfinished" + id);
     div.innerHTML = title;
     unfinished.appendChild(div);
 }

@@ -76,7 +76,8 @@ td {
 }
 
 /* 내가 그냥 넣음 */
-#description, #editDescription {
+#description,
+#editDescription {
     width: 250px;
     height: 120px;
 }
@@ -86,6 +87,9 @@ td {
     margin: 5px;
     padding: 5px;
     border: 1px groove #e7e7e7;
+
+    /* 내가 그냥 넣음 */
+    border-radius: 5px;
 }
 
 .writedUnfinished {
@@ -93,4 +97,7 @@ td {
     margin: 5px;
     padding: 5px;
     border: 1px groove #e7e7e7;
+
+    /* 내가 그냥 넣음 */
+    border-radius: 5px;
 }
