@@ -1,4 +1,4 @@
-h1 {  
+h1 {
     text-align: center;
     font-size: 70px;
     font-family: "Black Han Sans", sans-serif;
@@ -64,14 +64,32 @@ td {
     left: 80px;
 }
 
+#dailyEdit {
+    width: 500px;
+    height: 400px;
+    padding: 30px;
+    border: 2px ridge;
+    border-radius: 5px;
+    background-color: Rosybrown;
+    top: 145px;
+    left: 80px;
+}
+
 /* 내가 그냥 넣음 */
-#description {
+#description, #editDescription {
     width: 250px;
     height: 120px;
 }
 
 .writed {
     background-color: rgba(57, 206, 180, 1);
+    margin: 5px;
+    padding: 5px;
+    border: 1px groove #e7e7e7;
+}
+
+.writedUnfinished {
+    background-color: rgba(149, 165, 166, 1);
     margin: 5px;
     padding: 5px;
     border: 1px groove #e7e7e7;

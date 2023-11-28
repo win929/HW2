@@ -38,7 +38,7 @@
         
         <div class="row">
             <!-- 달력 -->
-            <div class="col-lg-9" id="calendar">
+            <div class="col-lg-9 col-sm-12" id="calendar">
                 <table>
                     <tr>
                         <th>SUN</th><th>MON</th><th>TUE</th><th>WED</th>
@@ -96,7 +96,7 @@
             </div>
 
             <!-- 오른쪽 영역 -->
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-sm-12">
                 <div class="rightField" id="unfinished"></div>
                 <div class="rightField" id="finished"></div>
             </div>
@@ -129,6 +129,34 @@
         <input type="button" value="저장" id="saveButton">
         <input type="button" value="취소" id="cancelButton">
     </div>
+
+    <!-- 일정 수정 모달창-->
+    <div class="modal" id="dailyEdit">
+        제목 : <input type="text" id="editTitle" disabled>
+        <br><br>
+
+        설명 : <textarea id="editDescription" disabled></textarea>
+        <br><br>
+
+        <label for="category">분류 :</label>
+        <select id="editCategory" name="category" disabled>
+        <option value="todo" selected>할일</option>
+        <option value="meeting">회의</option>
+        <option value="idea">아이디어</option>
+        <option value="shopping">쇼핑목록</option>
+        </select>
+        <br><br>
+
+        <form action="upload.php" method="post" enctype="multipart/form-data">
+            화일 : 
+            <input type="file" name="fileToUpload" id="editFileToUpload">
+        </form>
+        <br>
+
+        <input type="button" value="수정" id="editButton">
+        <input type="button" value="취소" id="editCancelButton">
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

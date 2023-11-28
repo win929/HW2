@@ -20,7 +20,16 @@ foreach ($lines as $line) {
 $order = $maxOrder + 1;
 
 $target_dir = "uploads/";
+
+// 디렉토리가 없으면 생성
+if (!is_dir($target_dir)) {
+    if (!mkdir($target_dir, 0777, true)) {
+        die('Failed to create directory...');
+    }
+}
+
 $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+
 $uploadOk = 1;
 $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 
