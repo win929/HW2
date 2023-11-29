@@ -87,9 +87,7 @@ $(document).ready(function () {
         clickedTd = event.target.id.substring(4);
 
         if (event.target.nodeName != "LI") {
-            if (
-                event.target.style.backgroundColor != "rgba(255, 178, 178, 0.4)"
-            ) {
+            if (event.target.style.backgroundColor != "rgba(255, 178, 178, 0.4)") {
                 var modal = $("#dailyWrite");
                 modal.css("display", "block");
             }
@@ -126,11 +124,7 @@ $(document).ready(function () {
                     }
                     $("#editCategory").val(categoryInEnglish);
                     $("#editFile").html(
-                        '<a href="uploads/' +
-                            response.file_name +
-                            '" target="_blank">' +
-                            response.file_name +
-                            "</a>"
+                        '<a href="uploads/' + response.file_name + '" target="_blank">' + response.file_name + "</a>"
                     );
                 },
             });
@@ -161,15 +155,11 @@ $(document).ready(function () {
         $("#editCategory").prop("disabled", false);
 
         // 파일 업로드 가능하게 함
-        $editFileToUpload = $(
-            "<input type='file' name='editFileToUpload' id='editFileToUpload'></input>"
-        );
+        $editFileToUpload = $("<input type='file' name='editFileToUpload' id='editFileToUpload'></input>");
         $("#editFile").replaceWith($editFileToUpload);
 
         // editButton -> submitButton로 교체
-        $submitButton = $(
-            "<input type='button' value='제출' id='submitButton'>"
-        );
+        $submitButton = $("<input type='button' value='제출' id='submitButton'>");
         $("#editButton").replaceWith($submitButton);
     });
 
@@ -207,9 +197,7 @@ $(document).ready(function () {
                 $editFile = $("<span id='editFile'></span>");
                 $("#editFileToUpload").replaceWith($editFile);
 
-                $editButton = $(
-                    "<input type='button' value='수정' id='editButton'>"
-                );
+                $editButton = $("<input type='button' value='수정' id='editButton'>");
                 $("#submitButton").replaceWith($editButton);
 
                 modal.css("display", "none");
