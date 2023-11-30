@@ -81,7 +81,7 @@ $(document).ready(function () {
         modal.css("display", "none");
     });
 
-    // 모달창 띄우기
+    // dailyWrite 모달창 띄우기
     $(document).on("click", ".date, .blnk", function (event) {
         // 클릭한 td의 id 값 저장
         clickedTd = event.target.id.substring(4);
@@ -91,44 +91,49 @@ $(document).ready(function () {
                 var modal = $("#dailyWrite");
                 modal.css("display", "block");
             }
-        } else {
-            prevId = event.target.id.substring(8);
-
-            $.ajax({
-                type: "POST",
-                url: "search.php",
-                data: { id: prevId },
-                dataType: "json",
-                success: function (response) {
-                    // 모달창 띄우기
-                    var modal = $("#dailyEdit");
-                    modal.css("display", "block");
-
-                    // 모달창에 일정 정보 표시
-                    $("#editTitle").val(response.title);
-                    $("#editDescription").val(response.description);
-                    var categoryInEnglish = "";
-                    switch (response.category) {
-                        case "할일":
-                            categoryInEnglish = "todo";
-                            break;
-                        case "회의":
-                            categoryInEnglish = "meeting";
-                            break;
-                        case "아이디어":
-                            categoryInEnglish = "idea";
-                            break;
-                        case "쇼핑목록":
-                            categoryInEnglish = "shopping";
-                            break;
-                    }
-                    $("#editCategory").val(categoryInEnglish);
-                    $("#editFile").html(
-                        '<a href="uploads/' + response.file_name + '" target="_blank">' + response.file_name + "</a>"
-                    );
-                },
-            });
         }
+    });
+
+    // 일정 클릭 시 dailyEdit 모달창 띄우기
+    $(document).on("click", ".writed", function (event) {
+        // 클릭한 td의 id 값 저장
+        clickedTd = event.target.id.substring(4);
+        prevId = event.target.id.substring(8);
+
+        $.ajax({
+            type: "POST",
+            url: "search.php",
+            data: { id: prevId },
+            dataType: "json",
+            success: function (response) {
+                // 모달창 띄우기
+                var modal = $("#dailyEdit");
+                modal.css("display", "block");
+
+                // 모달창에 일정 정보 표시
+                $("#editTitle").val(response.title);
+                $("#editDescription").val(response.description);
+                var categoryInEnglish = "";
+                switch (response.category) {
+                    case "할일":
+                        categoryInEnglish = "todo";
+                        break;
+                    case "회의":
+                        categoryInEnglish = "meeting";
+                        break;
+                    case "아이디어":
+                        categoryInEnglish = "idea";
+                        break;
+                    case "쇼핑목록":
+                        categoryInEnglish = "shopping";
+                        break;
+                }
+                $("#editCategory").val(categoryInEnglish);
+                $("#editFile").html(
+                    '<a href="uploads/' + response.file_name + '" target="_blank">' + response.file_name + "</a>"
+                );
+            },
+        });
     });
 
     // dailyEdit 모달창 닫기
@@ -203,6 +208,71 @@ $(document).ready(function () {
                 modal.css("display", "none");
             },
         });
+    });
+
+    // drag
+    $(document).on("dragstart", ".writed", function (event) {
+        event.originalEvent.dataTransfer.setData("text", event.target.id);
+        event.target.style.backgroundColor = "#33cc33";
+        event.target.style.color = "#fff";
+    });
+
+    // dragover
+    $(document).on("dragover", ".blnk, .writed", function (event) {
+        event.preventDefault();
+    });
+
+    // drop (blnk에 드롭)
+    $(document).on("drop", ".blnk", function (event) {
+        event.preventDefault();
+        var data = event.originalEvent.dataTransfer.getData("text");
+
+        var target = event.target;
+
+        // ol 요소가 있는지 확인합니다.
+        var ol = target.getElementsByTagName("ol")[0];
+
+        // ol 요소가 없다면 새로 생성합니다.
+        if (!ol) {
+            ol = document.createElement("ol");
+            target.appendChild(ol);
+        }
+
+        // 드래그한 요소를 가져옵니다.
+        var draggedElement = document.getElementById(data);
+
+        // 드래그한 요소의 스타일을 변경합니다.
+        draggedElement.style.backgroundColor = "rgba(57, 206, 180, 1)";
+        draggedElement.style.color = "#000";
+
+        // ol 요소에 드래그한 요소를 추가합니다.
+        ol.appendChild(draggedElement);
+
+        // data/mylists.json 수정
+        // 원래 date에 있던 schedule 중 drop하는 schedule의 order 값보다 order가 큰 schedule의 order를 1씩 감소시킴
+        // drop하는 schedule의 date는 drop하는 곳인 blnk의 id를 통해 구함
+        // drop하는 schedule의 order는 drop하는 곳의 date에 있는 schedule의 개수 + 1
+
+        $.ajax({
+            type: "POST",
+            url: "update.php",
+            data: {
+                id: data.substring(8),
+                newDate: clickedTdToDate(target.id.substring(4)),
+            },
+            dataType: "json",
+            success: function (response) {},
+        });
+    });
+
+    // drop (writed에 드롭)
+    $(document).on("drop", ".writed", function (event) {
+        event.preventDefault();
+
+        // data/mylists.json 수정
+        // drop하는 곳인 schedule의 order 값보다 order가 큰 schedule의 order를 1씩 증가시킴
+        // drop하는 schedule의 date는 drop하는 곳인 blnk의 id를 통해 구함
+        // drop하는 schedule의 order는 drop하는 곳의 order + 1
     });
 });
 
@@ -282,6 +352,8 @@ function writeSchedule(title, id, date) {
     li.setAttribute("class", "writed");
     li.setAttribute("id", "schedule" + id);
     li.innerHTML = title;
+    li.draggable = true;
+
     ol.appendChild(li);
 }
 
