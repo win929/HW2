@@ -18,6 +18,7 @@ $(document).ready(function () {
             response.schedules.forEach(function (schedule) {
                 var date = Number(schedule.date.slice(-2)); // 일자를 추출합니다.
                 writeSchedule(schedule.title, schedule.id, date);
+                writeUnfinished(schedule.title, schedule.id);
                 XMLDocument;
             });
         },
@@ -239,54 +240,89 @@ $(document).ready(function () {
     // dragover
     $(document).on("dragover", ".blnk, .writed", function (event) {
         event.preventDefault();
-    });
 
-    // drop (blnk에 드롭)
-    $(document).on("drop", ".blnk", function (event) {
-        event.preventDefault();
-        var data = event.originalEvent.dataTransfer.getData("text");
-
-        var target = event.target;
-
-        // ol 요소가 있는지 확인합니다.
-        var ol = target.getElementsByTagName("ol")[0];
-
-        // ol 요소가 없다면 새로 생성합니다.
-        if (!ol) {
-            ol = document.createElement("ol");
-            target.appendChild(ol);
+        // class가 writed인 요소인 경우
+        if (event.target.className == "writed") {
+            // 드래그 오버 영역에 있는 schedule의 배경색을 #aa0000, 글자색을 #fff으로 변경
+            event.target.style.backgroundColor = "#aa0000";
+            event.target.style.color = "#fff";
         }
-
-        // 드래그한 요소를 가져옵니다.
-        var draggedElement = document.getElementById(data);
-
-        // 드래그한 요소의 스타일을 변경합니다.
-        draggedElement.style.backgroundColor = "rgba(57, 206, 180, 1)";
-        draggedElement.style.color = "#000";
-
-        // ol 요소에 드래그한 요소를 추가합니다.
-        ol.appendChild(draggedElement);
-
-        $.ajax({
-            type: "POST",
-            url: "update.php",
-            data: {
-                id: data.substring(8),
-                newDate: clickedTdToDate(target.id.substring(4)),
-            },
-            dataType: "json",
-            success: function (response) {},
-        });
     });
 
-    // drop (writed에 드롭)
-    $(document).on("drop", ".writed", function (event) {
+    // dragleave
+    $(document).on("dragleave", ".writed", function (event) {
         event.preventDefault();
 
-        // data/mylists.json 수정
-        // drop하는 곳인 schedule의 order 값보다 order가 큰 schedule의 order를 1씩 증가시킴
-        // drop하는 schedule의 date는 drop하는 곳인 blnk의 id를 통해 구함
-        // drop하는 schedule의 order는 drop하는 곳의 order + 1
+        // 드래그 리브 영역에 있는 schedule의 배경색과 글자색을 원래대로 변경
+        event.target.style.backgroundColor = "rgba(57, 206, 180, 1)";
+        event.target.style.color = "#000";
+    });
+
+    // drop
+    $(document).on("drop", ".blnk, .writed", function (event) {
+        event.preventDefault();
+        if (event.target.className == "blnk") {
+            // blnk에 드롭
+            var data = event.originalEvent.dataTransfer.getData("text");
+
+            var target = event.target;
+
+            // ol 요소가 있는지 확인합니다.
+            var ol = target.getElementsByTagName("ol")[0];
+
+            // ol 요소가 없다면 새로 생성합니다.
+            if (!ol) {
+                ol = document.createElement("ol");
+                target.appendChild(ol);
+            }
+
+            // 드래그한 요소를 가져옵니다.
+            var draggedElement = document.getElementById(data);
+
+            // 드래그한 요소의 스타일을 변경합니다.
+            draggedElement.style.backgroundColor = "rgba(57, 206, 180, 1)";
+            draggedElement.style.color = "#000";
+
+            // ol 요소에 드래그한 요소를 추가합니다.
+            ol.appendChild(draggedElement);
+
+            $.ajax({
+                type: "POST",
+                url: "update.php",
+                data: {
+                    id: data.substring(8),
+                    newDate: clickedTdToDate(target.id.substring(4)),
+                },
+                success: function (response) {},
+            });
+        } else {
+            // writed에 드롭
+            var data = event.originalEvent.dataTransfer.getData("text");
+
+            // 드래그한 요소를 가져옵니다.
+            var draggedElement = document.getElementById(data);
+
+            // 드래그한 요소의 스타일을 변경합니다.
+            draggedElement.style.backgroundColor = "rgba(57, 206, 180, 1)";
+            draggedElement.style.color = "#000";
+
+            // 드롭 영역 바로 다음 sibling으로 드롭
+            event.target.parentNode.insertBefore(draggedElement, event.target.nextElementSibling);
+
+            // 드롭 영역에 있는 schedule의 배경색과 글자색을 원래대로 변경
+            event.target.style.backgroundColor = "rgba(57, 206, 180, 1)";
+            event.target.style.color = "#000";
+
+            $.ajax({
+                type: "POST",
+                url: "update.php",
+                data: {
+                    id: data.substring(8),
+                    newDate: clickedTdToDate(event.target.parentNode.parentNode.id.substring(4)),
+                },
+                success: function (response) {},
+            });
+        }
     });
 });
 
