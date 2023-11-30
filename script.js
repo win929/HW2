@@ -2,7 +2,26 @@ let clickedTd; // 클릭한 td id 저장
 let prevId; // 수정할 일정의 id 저장
 
 $(document).ready(function () {
-    blankColor(); // 달력 테이블에서 날짜가 없는 셀 표현
+    // 첫 로딩 시 1월에 해당하는 일정을 불러옵니다.
+    $.ajax({
+        url: "calendar.php",
+        type: "POST",
+        data: { month: "January" }, // 1월에 해당하는 데이터를 요청합니다.
+        dataType: "json", // 응답을 JSON으로 파싱합니다.
+        success: function (response) {
+            // 달력 테이블을 바꿉니다.
+            $("#calendar").html(response.calendar);
+
+            blankColor(); // 달력 테이블에서 날짜가 없는 셀 표현
+
+            // 각 일정을 달력에 표시합니다.
+            response.schedules.forEach(function (schedule) {
+                var date = Number(schedule.date.slice(-2)); // 일자를 추출합니다.
+                writeSchedule(schedule.title, schedule.id, date);
+                XMLDocument;
+            });
+        },
+    });
 
     // month가 바뀌면 달력 테이블도 바뀌도록 설정
     $("#month").change(function () {
@@ -247,11 +266,6 @@ $(document).ready(function () {
 
         // ol 요소에 드래그한 요소를 추가합니다.
         ol.appendChild(draggedElement);
-
-        // data/mylists.json 수정
-        // 원래 date에 있던 schedule 중 drop하는 schedule의 order 값보다 order가 큰 schedule의 order를 1씩 감소시킴
-        // drop하는 schedule의 date는 drop하는 곳인 blnk의 id를 통해 구함
-        // drop하는 schedule의 order는 drop하는 곳의 date에 있는 schedule의 개수 + 1
 
         $.ajax({
             type: "POST",
