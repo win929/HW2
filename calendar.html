@@ -1,162 +1,108 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="utf-8">
-    <title>202002529 이어진 HW2</title>
-    <!-- Black Han Sans -->
-    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <!-- External CSS -->
-    <link rel="stylesheet" href="style.css">
-    <!-- Material Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Add jQuery library -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-</head>
-<body>
-    <div class="container">
-        <!-- 제목 -->
-        <h1>나의 일지</h1>
+    <head>
+        <meta charset="utf-8" />
+        <title>202002529 이어진 HW2</title>
+        <!-- Black Han Sans -->
+        <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet" />
+        <!-- Bootstrap CSS -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous"
+        />
+        <!-- External CSS -->
+        <link rel="stylesheet" href="style.css" />
+        <!-- Material Icons -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+        <!-- Add jQuery library -->
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <!-- 제목 -->
+            <h1>나의 일지</h1>
 
-        <!-- 월 리스트 -->
-        <label for="month">달력 : </label>
-        <select id="month" name="month">
-        <option value="January">January</option>
-        <option value="February">February</option>
-        <option value="March">March</option>
-        <option value="April">April</option>
-        <option value="May">May</option>
-        <option value="June">June</option>
-        <option value="July">July</option>
-        <option value="August">August</option>
-        <option value="September">September</option>
-        <option value="October">October</option>
-        <option value="November">November</option>
-        <option value="December">December</option>
-        </select>
-        
-        <div class="row">
-            <!-- 달력 -->
-            <div class="col-lg-9 col-sm-12" id="calendar">
-                <table>
-                    <tr>
-                        <th>SUN</th><th>MON</th><th>TUE</th><th>WED</th>
-                        <th>THU</th><th>FRI</th><th>SAT</th>
-                    </tr>   
-                    <tr>
-                        <td class="date" id="date1">1</td><td class="date" id="date2">2</td><td class="date" id="date3">3</td><td class="date" id="date4">4</td>
-                        <td class="date" id="date5">5</td><td class="date" id="date6">6</td><td class="date" id="date7">7</td>
-                    </tr>
-                    <tr>
-                        <td class="blnk" id="blnk1"></td><td class="blnk" id="blnk2"></td><td class="blnk" id="blnk3"></td><td class="blnk" id="blnk4"></td>
-                        <td class="blnk" id="blnk5"></td><td class="blnk" id="blnk6"></td><td class="blnk" id="blnk7"></td>
-                    </tr>
-                    <tr>
-                        <td class="date" id="date8">8</td><td class="date" id="date9">9</td><td class="date" id="date10">10</td><td class="date" id="date11">11</td>
-                        <td class="date" id="date12">12</td><td class="date" id="date13">13</td><td class="date" id="date14">14</td>
-                    </tr>
-                    <tr>
-                        <td class="blnk" id="blnk8"></td><td class="blnk" id="blnk9"></td><td class="blnk" id="blnk10"></td><td class="blnk" id="blnk11"></td>
-                        <td class="blnk" id="blnk12"></td><td class="blnk" id="blnk13"></td><td class="blnk" id="blnk14"></td>
-                    </tr>
-                    <tr>
-                        <td class="date" id="date15">15</td><td class="date" id="date16">16</td><td class="date" id="date17">17</td><td class="date" id="date18">18</td>
-                        <td class="date" id="date19">19</td><td class="date" id="date20">20</td><td class="date" id="date21">21</td>
-                    </tr>
-                    <tr>
-                        <td class="blnk" id="blnk15"></td><td class="blnk" id="blnk16"></td><td class="blnk" id="blnk17"></td><td class="blnk" id="blnk18"></td>
-                        <td class="blnk" id="blnk19"></td><td class="blnk" id="blnk20"></td><td class="blnk" id="blnk21"></td>
-                    </tr>
-                    <tr>
-                        <td class="date" id="date22">22</td><td class="date" id="date23">23</td><td class="date" id="date24">24</td><td class="date" id="date25">25</td>
-                        <td class="date" id="date26">26</td><td class="date" id="date27">27</td><td class="date" id="date28">28</td>
-                    </tr>
-                    <tr>
-                        <td class="blnk" id="blnk22"></td><td class="blnk" id="blnk23"></td><td class="blnk" id="blnk24"></td><td class="blnk" id="blnk25"></td>
-                        <td class="blnk" id="blnk26"></td><td class="blnk" id="blnk27"></td><td class="blnk" id="blnk28"></td>
-                    </tr>
-                    <tr>
-                        <td class="date" id="date29">29</td><td class="date" id="date30">30</td><td class="date" id="date31">31</td><td class="date" id="date32"></td>
-                        <td class="date" id="date33"></td><td class="date" id="date34"></td><td class="date" id="date35"></td>
-                    </tr>
-                    <tr>
-                        <td class="blnk" id="blnk29"></td><td class="blnk" id="blnk30"></td><td class="blnk" id="blnk31"></td><td class="blnk" id="blnk32"></td>
-                        <td class="blnk" id="blnk33"></td><td class="blnk" id="blnk34"></td><td class="blnk" id="blnk35"></td>
-                    </tr>
-                    <tr>
-                        <td class="date" id="date36"></td><td class="date" id="date37"></td><td class="date" id="date38"></td><td class="date" id="date39"></td>
-                        <td class="date" id="date40"></td><td class="date" id="date41"></td><td class="date" id="date42"></td>
-                    </tr>
-                    <tr>
-                        <td class="blnk" id="blnk36"></td><td class="blnk" id="blnk37"></td><td class="blnk" id="blnk38"></td><td class="blnk" id="blnk39"></td>
-                        <td class="blnk" id="blnk40"></td><td class="blnk" id="blnk41"></td><td class="blnk" id="blnk42"></td>
-                    </tr>
-                </table>
-            </div>
+            <!-- 월 리스트 -->
+            <label for="month">달력 : </label>
+            <select id="month" name="month">
+                <option value="January">January</option>
+                <option value="February">February</option>
+                <option value="March">March</option>
+                <option value="April">April</option>
+                <option value="May">May</option>
+                <option value="June">June</option>
+                <option value="July">July</option>
+                <option value="August">August</option>
+                <option value="September">September</option>
+                <option value="October">October</option>
+                <option value="November">November</option>
+                <option value="December">December</option>
+            </select>
 
-            <!-- 오른쪽 영역 -->
-            <div class="col-lg-3 col-sm-12">
-                <div class="rightField" id="unfinished"></div>
-                <div class="rightField" id="finished"></div>
+            <div class="row">
+                <!-- 달력 -->
+                <div class="col-lg-9 col-sm-12" id="calendar"></div>
+
+                <!-- 오른쪽 영역 -->
+                <div class="col-lg-3 col-sm-12">
+                    <div class="rightField" id="unfinished"></div>
+                    <div class="rightField" id="finished"></div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- 일정 추가 모달창-->
-    <div class="modal" id="dailyWrite">
-        제목 : <input type="text" id="title">
-        <br><br>
+        <!-- 일정 추가 모달창-->
+        <div class="modal" id="dailyWrite">
+            제목 : <input type="text" id="title" /> <br /><br />
 
-        설명 : <textarea id="description"></textarea>
-        <br><br>
+            설명 : <textarea id="description"></textarea> <br /><br />
 
-        <label for="category">분류 :</label>
-        <select id="category" name="category">
-        <option value="todo" selected>할일</option>
-        <option value="meeting">회의</option>
-        <option value="idea">아이디어</option>
-        <option value="shopping">쇼핑목록</option>
-        </select>
-        <br><br>
+            <label for="category">분류 :</label>
+            <select id="category" name="category">
+                <option value="todo" selected>할일</option>
+                <option value="meeting">회의</option>
+                <option value="idea">아이디어</option>
+                <option value="shopping">쇼핑목록</option>
+            </select>
+            <br /><br />
 
-        <form action="upload.php" method="post" enctype="multipart/form-data">
-            화일 : 
-            <input type="file" name="fileToUpload" id="fileToUpload">
-        </form>
-        <br>
+            <form action="upload.php" method="post" enctype="multipart/form-data">
+                화일 :
+                <input type="file" name="fileToUpload" id="fileToUpload" />
+            </form>
+            <br />
 
-        <input type="button" value="저장" id="saveButton">
-        <input type="button" value="취소" id="cancelButton">
-    </div>
+            <input type="button" value="저장" id="saveButton" />
+            <input type="button" value="취소" id="cancelButton" />
+        </div>
 
-    <!-- 일정 수정 모달창-->
-    <div class="modal" id="dailyEdit">
-        제목 : <input type="text" id="editTitle" disabled>
-        <br><br>
+        <!-- 일정 수정 모달창-->
+        <div class="modal" id="dailyEdit">
+            제목 : <input type="text" id="editTitle" disabled /> <br /><br />
 
-        설명 : <textarea id="editDescription" disabled></textarea>
-        <br><br>
+            설명 : <textarea id="editDescription" disabled></textarea> <br /><br />
 
-        <label for="category">분류 :</label>
-        <select id="editCategory" name="category" disabled>
-        <option value="todo" selected>할일</option>
-        <option value="meeting">회의</option>
-        <option value="idea">아이디어</option>
-        <option value="shopping">쇼핑목록</option>
-        </select>
-        <br><br>
+            <label for="category">분류 :</label>
+            <select id="editCategory" name="category" disabled>
+                <option value="todo" selected>할일</option>
+                <option value="meeting">회의</option>
+                <option value="idea">아이디어</option>
+                <option value="shopping">쇼핑목록</option>
+            </select>
+            <br /><br />
 
-        <form action="upload.php" method="post" enctype="multipart/form-data">
-            화일 : 
-            <span id="editFile"></span>
-        </form>
-        <br>
+            <form action="upload.php" method="post" enctype="multipart/form-data">
+                화일 :
+                <span id="editFile"></span>
+            </form>
+            <br />
 
-        <input type="button" value="수정" id="editButton">
-        <input type="button" value="취소" id="editCancelButton">
-    </div>
+            <input type="button" value="수정" id="editButton" />
+            <input type="button" value="취소" id="editCancelButton" />
+        </div>
 
-    <script src="script.js"></script>
-</body>
+        <script src="script.js"></script>
+    </body>
 </html>

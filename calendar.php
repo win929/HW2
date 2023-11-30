@@ -37,21 +37,24 @@
     $calendar = '<table>';
     $calendar .= '<tr><th>SUN</th><th>MON</th><th>TUE</th><th>WED</th><th>THU</th><th>FRI</th><th>SAT</th></tr>';
 
-    $dateId = 1;
-    $date = 1;
-    $blankId = 1;
+    $date = 1; // 현재 출력하려는 날짜
+    $dateId = 1; // 현재 출력하려는 날짜의 위치
+    $blankId = 1; // 현재 출력하려는 빈칸의 위치
 
     for ($i = 0; $i < 6; $i++) {
+        // date 출력
         $calendar .= '<tr>';
         for ($j = 0; $j < 7; $j++) {
-            if ($date <= $days && $first_day < $dateId) {
+            // 날짜 출력
+            if ($date <= $days && ($i * 7 + $j) >= $first_day) {
                 $calendar .= '<td class="date" id="date'.($dateId++).'">'.($date++).'</td>';
-            } else {
+            } else { // 빈칸 출력
                 $calendar .= '<td class="date" id="date'.($dateId++).'"></td>';
             }
         }
         $calendar .= '</tr>';
 
+        // blnk 출력
         $calendar .= '<tr>';
         for ($j = 0; $j < 7; $j++) {
             $calendar .= '<td class="blnk" id="blnk'.($blankId++).'">';
