@@ -2,86 +2,12 @@ let clickedTd; // 클릭한 td id 저장
 let prevId; // 수정할 일정의 id 저장
 
 $(document).ready(function () {
-    // 첫 로딩 시 1월에 해당하는 일정을 불러옵니다.
-    $.ajax({
-        url: "calendar.php",
-        type: "POST",
-        data: { month: "January" }, // 1월에 해당하는 데이터를 요청합니다.
-        dataType: "json", // 응답을 JSON으로 파싱합니다.
-        success: function (response) {
-            // 달력 테이블을 바꿉니다.
-            $("#calendar").html(response.calendar);
-
-            blankColor(); // 달력 테이블에서 날짜가 없는 셀 표현
-
-            // unfinished 초기화
-            var unfinished = document.getElementById("unfinished");
-            while (unfinished.hasChildNodes()) {
-                unfinished.removeChild(unfinished.firstChild);
-            }
-
-            // 각 일정을 달력에 표시합니다.
-            response.schedules.forEach(function (schedule) {
-                var date = Number(schedule.date.slice(-2)); // 일자를 추출합니다.
-                writeSchedule(schedule.title, schedule.id, date);
-                writeUnfinished(schedule.title, schedule.id);
-                XMLDocument;
-            });
-
-            // finished 초기화
-            var finished = document.getElementById("finished");
-            while (finished.hasChildNodes()) {
-                finished.removeChild(finished.firstChild);
-            }
-
-            // 각 일정을 finished에 표시합니다.
-            response.finished.forEach(function (finished) {
-                writeFinished(finished.title, finished.id);
-            });
-        },
-    });
+    // 첫 로딩 시 1월에 해당하는 일정을 불러오기
+    loadCalendar("January");
 
     // month가 바뀌면 달력 테이블도 바뀌도록 설정
     $("#month").change(function () {
-        var selectedMonth = $("#month").val();
-
-        $.ajax({
-            url: "calendar.php",
-            type: "POST",
-            data: { month: selectedMonth },
-            dataType: "json", // 응답을 JSON으로 파싱합니다.
-            success: function (response) {
-                // 달력 테이블을 바꿉니다.
-                $("#calendar").html(response.calendar);
-
-                blankColor(); // 달력 테이블에서 날짜가 없는 셀 표현
-
-                // unfinished 초기화
-                var unfinished = document.getElementById("unfinished");
-                while (unfinished.hasChildNodes()) {
-                    unfinished.removeChild(unfinished.firstChild);
-                }
-
-                // 각 일정을 달력에 표시합니다.
-                response.schedules.forEach(function (schedule) {
-                    var date = Number(schedule.date.slice(-2)); // 일자를 추출합니다.
-                    writeSchedule(schedule.title, schedule.id, date);
-                    writeUnfinished(schedule.title, schedule.id);
-                    XMLDocument;
-                });
-
-                // finished 초기화
-                var finished = document.getElementById("finished");
-                while (finished.hasChildNodes()) {
-                    finished.removeChild(finished.firstChild);
-                }
-
-                // 각 일정을 finished에 표시합니다.
-                response.finished.forEach(function (finished) {
-                    writeFinished(finished.title, finished.id);
-                });
-            },
-        });
+        loadCalendar($("#month").val());
     });
 
     // schedule 저장
@@ -403,6 +329,47 @@ $(document).ready(function () {
         });
     });
 });
+
+// 달력 그리기
+function loadCalendar(selectedMonth) {
+    $.ajax({
+        url: "calendar.php",
+        type: "POST",
+        data: { month: selectedMonth },
+        dataType: "json", // 응답을 JSON으로 파싱합니다.
+        success: function (response) {
+            // 달력 테이블을 바꿉니다.
+            $("#calendar").html(response.calendar);
+
+            blankColor(); // 달력 테이블에서 날짜가 없는 셀 표현
+
+            // unfinished 초기화
+            var unfinished = document.getElementById("unfinished");
+            while (unfinished.hasChildNodes()) {
+                unfinished.removeChild(unfinished.firstChild);
+            }
+
+            // 각 일정을 달력에 표시합니다.
+            response.schedules.forEach(function (schedule) {
+                var date = Number(schedule.date.slice(-2)); // 일자를 추출합니다.
+                writeSchedule(schedule.title, schedule.id, date);
+                writeUnfinished(schedule.title, schedule.id);
+                XMLDocument;
+            });
+
+            // finished 초기화
+            var finished = document.getElementById("finished");
+            while (finished.hasChildNodes()) {
+                finished.removeChild(finished.firstChild);
+            }
+
+            // 각 일정을 finished에 표시합니다.
+            response.finished.forEach(function (finished) {
+                writeFinished(finished.title, finished.id);
+            });
+        },
+    });
+}
 
 // 달력 테이블에서 날짜가 없는 셀 표현
 function blankColor() {
