@@ -7,8 +7,9 @@
     $description = $_POST['description'];
     $category = $_POST['category'];
 
-    $lines = file_get_contents('data/mylists.json');
+    $lines = file_exists('data/mylists.json') ? file_get_contents('data/mylists.json') : '[]';
     $lines = json_decode($lines, true);
+
     $maxOrder = 0;
 
     foreach ($lines as $line) {
