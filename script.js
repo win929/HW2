@@ -27,6 +27,17 @@ $(document).ready(function () {
                 writeUnfinished(schedule.title, schedule.id);
                 XMLDocument;
             });
+
+            // finished 초기화
+            var finished = document.getElementById("finished");
+            while (finished.hasChildNodes()) {
+                finished.removeChild(finished.firstChild);
+            }
+
+            // 각 일정을 finished에 표시합니다.
+            response.finished.forEach(function (finished) {
+                writeFinished(finished.title, finished.id);
+            });
         },
     });
 
@@ -57,6 +68,17 @@ $(document).ready(function () {
                     writeSchedule(schedule.title, schedule.id, date);
                     writeUnfinished(schedule.title, schedule.id);
                     XMLDocument;
+                });
+
+                // finished 초기화
+                var finished = document.getElementById("finished");
+                while (finished.hasChildNodes()) {
+                    finished.removeChild(finished.firstChild);
+                }
+
+                // 각 일정을 finished에 표시합니다.
+                response.finished.forEach(function (finished) {
+                    writeFinished(finished.title, finished.id);
                 });
             },
         });
@@ -350,12 +372,6 @@ $(document).ready(function () {
             success: function (response) {
                 // finished에 표시할 일정 만들기
                 writeFinished(event.target.innerHTML, event.target.id);
-
-                // 달력에서 일정 삭제
-                $("#schedule" + prevId).remove();
-
-                // unfinished에서 일정 삭제
-                $("#unfinished" + prevId).remove();
             },
         });
     });
@@ -460,4 +476,10 @@ function writeFinished(title, id) {
     div.setAttribute("id", "finished" + id);
     div.innerHTML = "<del>" + title + "</del>";
     finished.appendChild(div);
+
+    // 달력에서 일정 삭제
+    $("#schedule" + id.substring(10)).remove();
+
+    // unfinished에서 일정 삭제
+    $("#unfinished" + id.substring(10)).remove();
 }

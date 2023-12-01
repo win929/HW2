@@ -64,10 +64,31 @@
 
     $calendar .= '</table>';
 
+    // 'mydeletelists.json' 파일에서 데이터를 가져옵니다.
+    if (file_exists('data/mydeletelists.json') && filesize('data/mydeletelists.json') > 0) {
+        // 'mydeletelists.json' 파일에서 데이터를 가져옵니다.
+        $data = file_get_contents('data/mydeletelists.json');
+        $finished_schedules = json_decode($data, true);
+    } else {
+        // 파일이 없거나 내용이 없을 경우 빈 배열을 생성합니다.
+        $finished_schedules = [];
+    }
+
+    // 해당 월의 완료된 일정만 선택합니다.
+    $finished_schedules_in_month = array_filter($finished_schedules, function($schedule) use ($year, $month_number) {
+        $date = strtotime($schedule['date']);
+        return date('Y', $date) == $year && date('n', $date) == $month_number;
+    });
+
+    // 배열의 인덱스를 재설정합니다.
+    $finished_schedules_in_month = array_values($finished_schedules_in_month);
+
+
     // 일정과 달력 정보를 배열로 반환합니다.
     $result = [
         'calendar' => $calendar,
-        'schedules' => $schedules_in_month
+        'schedules' => $schedules_in_month,
+        'finished' => $finished_schedules_in_month
     ];
 
     // JSON 형식으로 인코딩하여 반환합니다.
