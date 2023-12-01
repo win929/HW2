@@ -34,12 +34,7 @@ $(document).ready(function () {
                 // 저장 멘트 띄우기
                 alert("저장되었습니다.");
 
-                // 달력에 일정 표시
-                var targetDate = $("#date" + clickedTd).html();
-                writeSchedule($("#title").val(), id, targetDate);
-
-                // unfinished 일정 표시
-                writeUnfinished($("#title").val(), id);
+                loadCalendar($("#month").val());
 
                 // 모달창 닫기
                 var modal = $("#dailyWrite");
@@ -226,37 +221,25 @@ $(document).ready(function () {
             // blnk에 드롭
             var data = event.originalEvent.dataTransfer.getData("text");
 
-            var target = event.target;
-
-            // ol 요소가 있는지 확인합니다.
-            var ol = target.getElementsByTagName("ol")[0];
-
-            // ol 요소가 없다면 새로 생성합니다.
-            if (!ol) {
-                ol = document.createElement("ol");
-                target.appendChild(ol);
-            }
-
-            // 드래그한 요소를 가져옵니다.
-            var draggedElement = document.getElementById(data);
-
-            // 드래그한 요소의 스타일을 변경합니다.
-            draggedElement.style.backgroundColor = "rgba(57, 206, 180, 1)";
-            draggedElement.style.color = "#000";
-
-            // ol 요소에 드래그한 요소를 추가합니다.
-            ol.appendChild(draggedElement);
-
             $.ajax({
                 type: "POST",
                 url: "update.php",
                 data: {
                     id: data.substring(8),
-                    newDate: clickedTdToDate(target.id.substring(4)),
+                    newDate: clickedTdToDate(event.target.id.substring(4)),
                     dropArea: "blnk",
                     targetId: "",
                 },
-                success: function (response) {},
+                success: function (response) {
+                    // 드래그한 요소를 가져옵니다.
+                    var draggedElement = document.getElementById(data);
+
+                    // 드래그한 요소의 스타일을 변경합니다.
+                    draggedElement.style.backgroundColor = "rgba(57, 206, 180, 1)";
+                    draggedElement.style.color = "#000";
+
+                    loadCalendar($("#month").val());
+                },
             });
         } else {
             event.stopPropagation();
@@ -264,31 +247,29 @@ $(document).ready(function () {
             // writed에 드롭
             var data = event.originalEvent.dataTransfer.getData("text");
 
-            // 드래그한 요소를 가져옵니다.
-            var draggedElement = document.getElementById(data);
-
-            // 드래그한 요소의 스타일을 변경합니다.
-            draggedElement.style.backgroundColor = "rgba(57, 206, 180, 1)";
-            draggedElement.style.color = "#000";
-
-            // 드롭 영역 바로 다음 sibling으로 드롭
-            event.target.parentNode.insertBefore(draggedElement, event.target.nextElementSibling);
-
-            // 드롭 영역에 있는 schedule의 배경색과 글자색을 원래대로 변경
-            event.target.style.backgroundColor = "rgba(57, 206, 180, 1)";
-            event.target.style.color = "#000";
-
             $.ajax({
                 type: "POST",
                 url: "update.php",
-                dataType: "text",
                 data: {
                     id: data.substring(8),
                     newDate: clickedTdToDate(event.target.parentNode.parentNode.id.substring(4)),
                     dropArea: "writed",
                     targetId: event.target.id.substring(8),
                 },
-                success: function (response) {},
+                success: function (response) {
+                    // 드래그한 요소를 가져옵니다.
+                    var draggedElement = document.getElementById(data);
+
+                    // 드래그한 요소의 스타일을 변경합니다.
+                    draggedElement.style.backgroundColor = "rgba(57, 206, 180, 1)";
+                    draggedElement.style.color = "#000";
+
+                    // 드롭 영역에 있는 schedule의 배경색과 글자색을 원래대로 변경
+                    event.target.style.backgroundColor = "rgba(57, 206, 180, 1)";
+                    event.target.style.color = "#000";
+
+                    loadCalendar($("#month").val());
+                },
             });
         }
     });
@@ -303,8 +284,7 @@ $(document).ready(function () {
             url: "delete.php",
             data: { id: prevId },
             success: function (response) {
-                // finished에 표시할 일정 만들기
-                writeFinished(event.target.innerHTML, prevId);
+                loadCalendar($("#month").val());
             },
         });
     });
@@ -322,16 +302,7 @@ $(document).ready(function () {
             data: { id: prevId },
             dataType: "json",
             success: function (response) {
-                var date = Number(response.date.slice(-2));
-
-                // 달력에 일정 표시
-                writeSchedule(response.title, response.id, date);
-
-                // unfinished 일정 표시
-                writeUnfinished(response.title, response.id);
-
-                // finished에서 일정 삭제
-                $("#finished" + prevId).remove();
+                loadCalendar($("#month").val());
             },
         });
     });
@@ -356,19 +327,30 @@ function loadCalendar(selectedMonth) {
                 unfinished.removeChild(unfinished.firstChild);
             }
 
-            // 각 일정을 달력에 표시합니다.
-            response.schedules.forEach(function (schedule) {
-                var date = Number(schedule.date.slice(-2)); // 일자를 추출합니다.
-                writeSchedule(schedule.title, schedule.id, date);
-                writeUnfinished(schedule.title, schedule.id);
-                XMLDocument;
-            });
-
             // finished 초기화
             var finished = document.getElementById("finished");
             while (finished.hasChildNodes()) {
                 finished.removeChild(finished.firstChild);
             }
+
+            // 각 일정을 달력에 표시합니다.
+            response.schedules
+                .sort((a, b) => {
+                    // date를 기준으로 정렬
+                    if (a.date < b.date) {
+                        return -1;
+                    } else if (a.date > b.date) {
+                        return 1;
+                    } else {
+                        // 같은 date를 가진 요소는 order를 기준으로 정렬
+                        return a.order - b.order;
+                    }
+                })
+                .forEach(function (schedule) {
+                    var date = Number(schedule.date.slice(-2)); // 일자를 추출합니다.
+                    writeSchedule(schedule.title, schedule.id, date);
+                    writeUnfinished(schedule.title, schedule.id);
+                });
 
             // 각 일정을 finished에 표시합니다.
             response.finished.forEach(function (finished) {
