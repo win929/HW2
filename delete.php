@@ -1,6 +1,4 @@
-<?php
-    // 수정 필요
-    
+<?php   
     header("Content-Type: text/html; charset=UTF-8");
 
     $id = $_POST['id'];

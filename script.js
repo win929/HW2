@@ -371,7 +371,34 @@ $(document).ready(function () {
             data: { id: prevId },
             success: function (response) {
                 // finished에 표시할 일정 만들기
-                writeFinished(event.target.innerHTML, event.target.id);
+                writeFinished(event.target.innerHTML, prevId);
+            },
+        });
+    });
+
+    // finished click
+    $(document).on("click", ".writedFinished", function (event) {
+        // 클릭한 td의 id 값 저장
+        prevId = event.target.id.substring(8);
+
+        alert("미완료로 표시됩니다.");
+
+        $.ajax({
+            type: "POST",
+            url: "restore.php",
+            data: { id: prevId },
+            dataType: "json",
+            success: function (response) {
+                var date = Number(response.date.slice(-2));
+
+                // 달력에 일정 표시
+                writeSchedule(response.title, response.id, date);
+
+                // unfinished 일정 표시
+                writeUnfinished(response.title, response.id);
+
+                // finished에서 일정 삭제
+                $("#finished" + prevId).remove();
             },
         });
     });
@@ -478,8 +505,8 @@ function writeFinished(title, id) {
     finished.appendChild(div);
 
     // 달력에서 일정 삭제
-    $("#schedule" + id.substring(10)).remove();
+    $("#schedule" + id).remove();
 
     // unfinished에서 일정 삭제
-    $("#unfinished" + id.substring(10)).remove();
+    $("#unfinished" + id).remove();
 }
