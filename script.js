@@ -14,6 +14,12 @@ $(document).ready(function () {
 
             blankColor(); // 달력 테이블에서 날짜가 없는 셀 표현
 
+            // unfinished 초기화
+            var unfinished = document.getElementById("unfinished");
+            while (unfinished.hasChildNodes()) {
+                unfinished.removeChild(unfinished.firstChild);
+            }
+
             // 각 일정을 달력에 표시합니다.
             response.schedules.forEach(function (schedule) {
                 var date = Number(schedule.date.slice(-2)); // 일자를 추출합니다.
@@ -39,10 +45,17 @@ $(document).ready(function () {
 
                 blankColor(); // 달력 테이블에서 날짜가 없는 셀 표현
 
+                // unfinished 초기화
+                var unfinished = document.getElementById("unfinished");
+                while (unfinished.hasChildNodes()) {
+                    unfinished.removeChild(unfinished.firstChild);
+                }
+
                 // 각 일정을 달력에 표시합니다.
                 response.schedules.forEach(function (schedule) {
                     var date = Number(schedule.date.slice(-2)); // 일자를 추출합니다.
                     writeSchedule(schedule.title, schedule.id, date);
+                    writeUnfinished(schedule.title, schedule.id);
                     XMLDocument;
                 });
             },
@@ -323,6 +336,32 @@ $(document).ready(function () {
                 success: function (response) {},
             });
         }
+    });
+
+    // unfinished click
+    $(document).on("click", ".writedUnfinished", function (event) {
+        // 클릭한 td의 id 값 저장
+        prevId = event.target.id.substring(10);
+
+        // 달력에 일정 표시하는 부분 수정
+        $("#schedule" + prevId).remove();
+
+        // unfinished 일정 표시하는 부분 수정
+        $("#unfinished" + prevId).remove();
+
+        // $.ajax({
+        //     type: "POST",
+        //     url: "finish.php",
+        //     data: { id: prevId },
+        //     dataType: "json",
+        //     success: function (response) {
+        //         // 달력에 일정 표시하는 부분 수정
+        //         $("#schedule" + prevId).text(response.title);
+
+        //         // unfinished 일정 표시하는 부분 수정
+        //         $("#unfinished" + prevId).remove();
+        //     },
+        // });
     });
 });
 
