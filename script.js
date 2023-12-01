@@ -253,10 +253,14 @@ $(document).ready(function () {
                 data: {
                     id: data.substring(8),
                     newDate: clickedTdToDate(target.id.substring(4)),
+                    dropArea: "blnk",
+                    targetId: "",
                 },
                 success: function (response) {},
             });
         } else {
+            event.stopPropagation();
+
             // writed에 드롭
             var data = event.originalEvent.dataTransfer.getData("text");
 
@@ -277,9 +281,12 @@ $(document).ready(function () {
             $.ajax({
                 type: "POST",
                 url: "update.php",
+                dataType: "text",
                 data: {
                     id: data.substring(8),
                     newDate: clickedTdToDate(event.target.parentNode.parentNode.id.substring(4)),
+                    dropArea: "writed",
+                    targetId: event.target.id.substring(8),
                 },
                 success: function (response) {},
             });
