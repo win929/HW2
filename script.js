@@ -343,10 +343,15 @@ $(document).ready(function () {
         // 클릭한 td의 id 값 저장
         prevId = event.target.id.substring(10);
 
-        // 달력에 일정 표시하는 부분 수정
+        console.log($("#schedule" + prevId).innerHTML);
+
+        // finished에 표시할 일정 만들기
+        writeFinished($("#schedule" + prevId).innerHTML, event.target.id);
+
+        // 달력에서 일정 삭제
         $("#schedule" + prevId).remove();
 
-        // unfinished 일정 표시하는 부분 수정
+        // unfinished에서 일정 삭제
         $("#unfinished" + prevId).remove();
 
         // $.ajax({
@@ -355,10 +360,13 @@ $(document).ready(function () {
         //     data: { id: prevId },
         //     dataType: "json",
         //     success: function (response) {
-        //         // 달력에 일정 표시하는 부분 수정
-        //         $("#schedule" + prevId).text(response.title);
+        //         // finished에 표시할 일정 만들기
+        //         writeFinished($("#schedule" + prevId).innerHTML, event.target.id);
 
-        //         // unfinished 일정 표시하는 부분 수정
+        //         // 달력에서 일정 삭제
+        //         $("#schedule" + prevId).remove();
+
+        //         // unfinished에서 일정 삭제
         //         $("#unfinished" + prevId).remove();
         //     },
         // });
@@ -454,4 +462,14 @@ function writeUnfinished(title, id) {
     div.setAttribute("id", "unfinished" + id);
     div.innerHTML = title;
     unfinished.appendChild(div);
+}
+
+// finished 일정 표시
+function writeFinished(title, id) {
+    var finished = document.getElementById("finished");
+    var div = document.createElement("div");
+    div.setAttribute("class", "writedFinished");
+    div.setAttribute("id", "finished" + id);
+    div.innerHTML = title;
+    finished.appendChild(div);
 }
