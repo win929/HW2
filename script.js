@@ -333,6 +333,11 @@ function loadCalendar(selectedMonth) {
                 finished.removeChild(finished.firstChild);
             }
 
+            // 각 일정을 unfinished에 표시합니다.
+            response.schedules.forEach(function (schedule) {
+                writeUnfinished(schedule.title, schedule.id);
+            });
+
             // 각 일정을 달력에 표시합니다.
             response.schedules
                 .sort((a, b) => {
@@ -349,7 +354,6 @@ function loadCalendar(selectedMonth) {
                 .forEach(function (schedule) {
                     var date = Number(schedule.date.slice(-2)); // 일자를 추출합니다.
                     writeSchedule(schedule.title, schedule.id, date);
-                    writeUnfinished(schedule.title, schedule.id);
                 });
 
             // 각 일정을 finished에 표시합니다.
