@@ -7,6 +7,15 @@
     $description = $_POST['description'];
     $category = $_POST['category'];
 
+    $data_dir = "data/";
+
+    // 디렉토리가 없으면 생성
+    if (!is_dir($data_dir)) {
+        if (!mkdir($data_dir, 0777, true)) {
+            die('Failed to create data directory...');
+        }
+    }
+
     $lines = file_exists('data/mylists.json') ? file_get_contents('data/mylists.json') : '[]';
     $lines = json_decode($lines, true);
 
